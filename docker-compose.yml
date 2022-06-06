@@ -11,6 +11,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - 27017:27017
+    networks:
+      - backend
 
   api:
     container_name: api
@@ -23,3 +25,8 @@ services:
     env_file: ./api-booking/.env
     ports:
       - 3000:3000
+    networks:
+      - backend
+
+networks:
+  backend:

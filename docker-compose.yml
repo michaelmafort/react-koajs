@@ -28,5 +28,16 @@ services:
     networks:
       - backend
 
+  front:
+    container_name: front
+    image: node:lts-alpine
+    restart: always
+    volumes:
+      - ./manager-front:/app
+    working_dir: /app
+    command: "npm start"
+    ports:
+      - 3001:3001
+
 networks:
   backend:

@@ -14,9 +14,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "tailwind-dev": "npx tailwindcss -i ./src/App.css -o ./public/style.css --watch",
-    "build": "react-scripts build",
+    "start": "npm run tailwind-dev & export PORT=3001 && react-scripts start",
+    "tailwind-dev": "npx tailwindcss -i ./src/style.tailwind.css -o ./public/style.css --watch",
+    "tailwind-prod": "npx tailwindcss -i ./src/style.tailwind.css -o ./public/style.css --minify",
+    "build": "react-scripts build && @tailwind-prod",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

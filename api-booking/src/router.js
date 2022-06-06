@@ -3,6 +3,7 @@ const router = new Router();
 const bookingController = require('./controllers/booking_controller');
 
 const route = router.post('/restaurant/:restaurant_id/booking/add', bookingController.add);
+route.get('/restaurant/:restaurant_id/booking', bookingController.list);
 
 route.get('/', async (ctx) => {
     ctx.body = 'Server alive!';

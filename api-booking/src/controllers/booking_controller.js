@@ -25,7 +25,20 @@ const add = async (ctx) => {
     }
 };
 
+const list = async (ctx) => {
+    try {
+        ctx.body = await Booking
+            .find({ restaurant: ctx.params.restaurant_id, arrivalAt: { $gte: new Date() } })
+            .sort({ arrivalAt: 1 })
+            .limit(50);
+    } catch (e) {
+        ctx.status = 500;
+        ctx.throw('Server error!');
+    }
+};
+
 
 module.exports = {
     add,
+    list,
 }

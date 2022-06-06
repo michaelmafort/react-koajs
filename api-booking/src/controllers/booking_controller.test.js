@@ -1,6 +1,7 @@
 const request = require('supertest');
-const { Booking } = require('../models/booking');
+const mongoose = require('mongoose');
 const app = require('../../app');
+let callback;
 
 test('Success adding new Booking', async () => {
     const booking = {
@@ -10,13 +11,11 @@ test('Success adding new Booking', async () => {
         phone: "(11) 96375-6296",
         people: "7"
     };
-    jest.spyOn(Booking, 'create')
-        .mockReturnValueOnce({ ...booking, _id: "xhsyqtttysjahsgdgdtta" });
-    const response = await request(app.callback())
+    const response = await request(callback)
         .post('/restaurant/629969290ea3b264f4032297/booking/add')
         .send(booking);
     expect(response.status).toBe(200);
-    expect(JSON.parse(response.text)).toMatchObject({_id: expect.any(String)});
+    expect(JSON.parse(response.text)).toMatchObject({_id: expect.any(String), email: 'michaelmafort@gmail.com'});
 });
 
 test('Validation fail adding new Booking', async () => {
@@ -27,7 +26,7 @@ test('Validation fail adding new Booking', async () => {
         phone: "(11) 96375-6296",
         people: "7"
     };
-    const response = await request(app.callback())
+    const response = await request(callback)
         .post('/restaurant/629969290ea3b264f4032297/booking/add')
         .send(booking);
     expect(response.status).toBe(400);
@@ -35,7 +34,25 @@ test('Validation fail adding new Booking', async () => {
 
 });
 
+test('List Bookings', async () => {
+    const response = await request(callback).get('/restaurant/629969290ea3b264f4032297/booking');
+    expect(response.status).toBe(200);
+    expect(JSON.parse(response.text).length).toBe(1);
+
+});
+
 afterEach(() => {
     jest.restoreAllMocks();
-})
+});
+
+beforeAll( async () => {
+    await mongoose.connect(process.env.MONGODB_URI, {dbName: 'integration_test'});
+    await mongoose.connection.db.dropDatabase();
+
+    callback = await app.callback();
+});
+
+afterAll(() => {
+    mongoose.disconnect();
+});
 

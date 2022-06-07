@@ -58,12 +58,20 @@ class Reservations extends React.Component {
         })
     }
 
+    editReservationModalHandler(reservation) {
+        this.setState({
+            modalTitle: 'Edit reservation #' + reservation._id.substr(-8),
+            modalContent: (<ReservationForm method="edit" reservation={reservation} />),
+            modalOpen: true,
+        })
+    }
+
     render() {
 
         return (
             <main className="lg:container mx-auto pt-4">
                 <div className={'w-full bg-black bg-opacity-90 h-screen absolute top-0 left-0 flex flex-col justify-start pt-6 items-center' + (this.state.modalOpen ? '' : ' hidden')}>
-                    <div className="w-2/3 bg-gray-50 text-gray-800 rounded-lg p-6 shadow">
+                    <div className="lg:w-2/3 xs:w-full bg-gray-50 text-gray-800 rounded-lg p-6 shadow">
                         <div className="flex flex-row justify-between items-center font-bold text-2xl">
                             <h1>{this.state.modalTitle}</h1>
                             <span className="cursor-pointer" onClick={this.closeModalHandler.bind(this)}>X</span>
@@ -84,7 +92,7 @@ class Reservations extends React.Component {
                     <thead>
                         <tr>
                             <th>Guest Name</th>
-                            <th>Reservation for #people</th>
+                            <th>#people</th>
                             <th>Date</th>
                             <th></th>
                         </tr>
@@ -97,7 +105,10 @@ class Reservations extends React.Component {
                                     <td>{item.name}</td>
                                     <td>{item.people}</td>
                                     <td>{(new Date(item.arrivalAt)).toLocaleString()}</td>
-                                    <td><button onClick={this.showReservationModalHandler.bind(this, item)}>View</button></td>
+                                    <td className="flex flex-row gap-4">
+                                        <button onClick={this.showReservationModalHandler.bind(this, item)}>View</button>
+                                        <button onClick={this.editReservationModalHandler.bind(this, item)}>Edit</button>
+                                    </td>
                                 </tr>
                             );
                         })

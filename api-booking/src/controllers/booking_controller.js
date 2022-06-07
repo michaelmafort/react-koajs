@@ -37,8 +37,45 @@ const list = async (ctx) => {
     }
 };
 
+const edit = async (ctx) => {
+    const restaurant = ctx.params.restaurant_id;
+    const arrivalAt = new Date(ctx.request.body.arrivalAt);
+    const name = ctx.request.body.name;
+    const email = ctx.request.body.email;
+    const phone = ctx.request.body.phone;
+    const people = ctx.request.body.people;
+    const status = ctx.request.body.status;
+    const id = ctx.params.id;
+
+    const bookingData = {
+        restaurant,
+        arrivalAt,
+        name,
+        email,
+        phone,
+        people,
+        status,
+    };
+    try{
+        const updated = await Booking.updateOne({ _id: id }, bookingData, { runValidators: true });
+        if(updated.matchedCount == 1) {
+            ctx.body = { updated: true };
+        } else {
+            throw 'Booking not found!';
+        }
+    } catch(e) {
+        if(e.constructor.name == 'ValidationError') {
+            throwValidationFailResponse(ctx, e);
+        } else {
+            console.log(e);
+            throwUpdatedFailResponse(ctx, e);
+        }
+    }
+};
+
 
 module.exports = {
     add,
     list,
+    edit,
 }

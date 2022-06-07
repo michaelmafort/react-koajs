@@ -12,9 +12,11 @@ class ReservationForm extends React.Component {
             people: '',
             arrivalDate: '',
             arrivalTime: '',
+            status: 'QUEUED',
             errors: [],
             response: {},
             createdNew: false,
+            edited: false,
         };
 
         this.changeHandler = this.changeHandler.bind(this);
@@ -42,7 +44,7 @@ class ReservationForm extends React.Component {
         if (this.state.phone.trim() === '') {
             errors.push('Phone is required.');
         }
-        if (this.state.people.trim() === '' || this.state.people === 0) {
+        if (this.state.people.toString().trim() === '' || this.state.people === 0) {
             errors.push('How many people is required.');
         }
 
@@ -64,21 +66,23 @@ class ReservationForm extends React.Component {
                 phone: this.state.phone,
                 people: this.state.people,
                 arrivalAt: this.state.arrivalDate + 'T' + this.state.arrivalTime + ':00',
+                status: this.state.status,
             };
 
             const options = {
-                method: 'POST',
+                method: this.props.method === 'add' ? 'POST' : 'PUT',
                 headers: headers,
                 body: JSON.stringify(postData),
             };
 
-            fetch(BOOKING_API + '/restaurant/629969290ea3b264f4032297/booking/add', options)
+            fetch(BOOKING_API + '/restaurant/629969290ea3b264f4032297/booking/' + (this.props.method === 'add' ? 'add' : this.props.reservation._id + '/edit'), options)
                 .then((response) => {
                     if(response.ok) {
                         response.json().then((data) => {
                             this.setState({
                                 response: data,
-                                createdNew: true,
+                                createdNew: (this.props.method === 'add' ? true : false),
+                                edited: (this.props.method === 'edit' ? true : false),
                             });
                         })
                     } else {
@@ -89,6 +93,17 @@ class ReservationForm extends React.Component {
                 });
         }
     };
+
+    componentDidMount() {
+        if (this.props.method === 'edit') {
+            this.setState({
+                ...this.props.reservation,
+                arrivalDate: this.props.reservation.arrivalAt.split('T')[0],
+                arrivalTime: this.props.reservation.arrivalAt.split('T')[1].substr(0, 5),
+            });
+            console.log(this.props.reservation);
+        }
+    }
 
     render() {
         const restaurantOpen = 11;
@@ -112,7 +127,25 @@ class ReservationForm extends React.Component {
                     <h2 className="font-bold text-2xl">Reservation created successfully. Booking ID: #{this.state.response._id?.substr(-8)}</h2>
                     <p>Thank you for making your reservation with us, we are waiting for you.</p>
                 </div>
-                <div className={this.state.createdNew ? 'hidden' : 'flex flex-col gap-4 mt-4'}>
+                <div className={this.state.edited ? 'flex flex-col gap-2 justify-center items-center h-full' : 'hidden'}>
+                    <h2 className="font-bold text-2xl">Reservation updated successfully.</h2>
+                </div>
+                <div className={(this.state.createdNew || this.state.updated) ? 'hidden' : 'flex flex-col gap-4 mt-4'}>
+                    <div className={"flex flex-col gap-1" + (this.props.method === 'edit' ? '' : ' hidden')}>
+                        <label>Status</label>
+                        <select
+                            name="status"
+                            data-testid="status"
+                            className="text-gray-800 py-2 px-2 rounded"
+                            value={this.state.status}
+                            onChange={this.changeHandler}
+                        >
+                            <option value="QUEUED">QUEUED</option>
+                            <option value="WAITING">WAITING</option>
+                            <option value="INSIDE">INSIDE</option>
+                            <option value="CANCELED">CANCELED</option>
+                        </select>
+                    </div>
                     <div className="flex flex-row gap-4">
                         <div className="flex flex-col gap-1">
                             <label>Date</label>

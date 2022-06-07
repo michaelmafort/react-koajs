@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import ReservationView from './ReservationView';
 
-test('renders learn react link', () => {
+test('Check if view render the user data', () => {
     const reservationData = {
         _id : "629e6484276028166409b918",
         restaurant : "629969290ea3b264f4032297",

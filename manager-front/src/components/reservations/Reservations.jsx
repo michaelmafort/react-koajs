@@ -3,6 +3,7 @@ import { BOOKING_API } from '../../config/environment';
 import { ReservationView } from '../';
 
 import './Reservations.css';
+import ReservationForm from "../forms/ReservationForm";
 
 class Reservations extends React.Component {
     constructor(props) {
@@ -49,6 +50,14 @@ class Reservations extends React.Component {
         })
     }
 
+    newReservationModalHandler() {
+        this.setState({
+            modalTitle: 'New reservation',
+            modalContent: (<ReservationForm method="add" />),
+            modalOpen: true,
+        })
+    }
+
     render() {
 
         return (
@@ -64,7 +73,10 @@ class Reservations extends React.Component {
                         </main>
                     </div>
                 </div>
-                <h1 className="font-bold text-4xl">Reservations</h1>
+                <div className="flex flex-row justify-between items-center">
+                    <h1 className="font-bold text-4xl">Reservations</h1>
+                    <button className="bg-white text-gray-900 p-2 border border-gray-600 rounded-lg" onClick={this.newReservationModalHandler.bind(this)}>New reservation</button>
+                </div>
                 <div className={(this.state.reservations.length === 0 ? 'mt-4' : 'hidden')}>
                     No reservations for today or in next days.
                 </div>

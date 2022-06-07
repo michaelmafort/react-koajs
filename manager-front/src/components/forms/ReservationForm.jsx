@@ -103,8 +103,8 @@ class ReservationForm extends React.Component {
         return (
             <form className="flex flex-col gap-4 mt-4 h-full" onSubmit={this.submitHandler}>
                 <div className={'flex flex-col justify-start text-white items-start relative rounded-xl bg-red-900 p-4 ' + (this.state.errors.length >0 ? '' : 'hidden')}>
-                    Some errors found to send your request. Please check the errors below and fix to resend.
-                    <ul className="list-disc ml-12 mt-6">
+                    <span>Some errors found to send your request. Please check the errors below and fix to resend.</span>
+                    <ul data-testid="error-display" className="list-disc ml-12 mt-6">
                         {this.state.errors.map((error) => (<li key={error}>{error}</li>))}
                     </ul>
                 </div>
@@ -112,17 +112,25 @@ class ReservationForm extends React.Component {
                     <h2 className="font-bold text-2xl">Reservation created successfully. Booking ID: #{this.state.response._id?.substr(-8)}</h2>
                     <p>Thank you for making your reservation with us, we are waiting for you.</p>
                 </div>
-                <div className={"flex flex-col gap-4 mt-4 " + (this.state.response._id === undefined ? '' : 'hidden')}>
+                <div className={this.state.createdNew ? 'hidden' : 'flex flex-col gap-4 mt-4'}>
                     <div className="flex flex-row gap-4">
                         <div className="flex flex-col gap-1">
                             <label>Date</label>
-                            <input name="arrivalDate" min={minDate} className="text-gray-800 py-1 px-2 rounded" type="date" value={this.state.arrivalDate}
-                                   onChange={this.changeHandler}/>
+                            <input
+                                data-testid="arrivalDate"
+                                name="arrivalDate"
+                                min={minDate}
+                                className="text-gray-800 py-1 px-2 rounded"
+                                type="date"
+                                value={this.state.arrivalDate}
+                                onChange={this.changeHandler}
+                            />
                         </div>
                         <div className="flex flex-col gap-1">
                             <label>Time</label>
                             <select
                                 name="arrivalTime"
+                                data-testid="arrivalTime"
                                 className="text-gray-800 py-2 px-2 rounded"
                                 value={this.state.arrivalTime}
                                 onChange={this.changeHandler}
@@ -135,25 +143,25 @@ class ReservationForm extends React.Component {
 
                     <div className="flex flex-col gap-1">
                         <label>Name</label>
-                        <input name="name" className="text-gray-800 py-1 px-2 rounded" type="text" value={this.state.name}
+                        <input name="name" data-testid="name" className="text-gray-800 py-1 px-2 rounded" type="text" value={this.state.name}
                                onChange={this.changeHandler}/>
                     </div>
                     <div className="flex flex-col gap-1">
                         <label>E-mail</label>
-                        <input name="email" className="text-gray-800 py-1 px-2 rounded" type="email" value={this.state.email}
+                        <input name="email" data-testid="email" className="text-gray-800 py-1 px-2 rounded" type="email" value={this.state.email}
                                onChange={this.changeHandler}/>
                     </div>
                     <div className="flex flex-col gap-1">
                         <label>Phone</label>
-                        <input name="phone" className="text-gray-800 py-1 px-2 rounded" type="text" value={this.state.phone}
+                        <input name="phone" data-testid="phone" className="text-gray-800 py-1 px-2 rounded" type="text" value={this.state.phone}
                                onChange={this.changeHandler}/>
                     </div>
                     <div className="flex flex-col gap-1">
                         <label>How many people?</label>
-                        <input name="people" className="text-gray-800 py-1 px-2 rounded" type="number" min="1" value={this.state.people}
+                        <input name="people" data-testid="people" className="text-gray-800 py-1 px-2 rounded" type="number" min="1" value={this.state.people}
                                onChange={this.changeHandler}/>
                     </div>
-                    <input type="submit" value="Submit"
+                    <input type="submit" data-testid="submit-button" value="Submit"
                            className="bg-white cursor-pointer shadow rounded-lg w-1/2 text-blue-800 p-2 font-bold"/>
                 </div>
             </form>

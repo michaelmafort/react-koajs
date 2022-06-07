@@ -9,10 +9,13 @@ This application use docker to run each service container, to start follow the s
 3. Rename the `.env-example` from api-booking to `.env`
 4. Update `.env` file with the credentials you have configured on `docker-compose.yml` environment for mongo service. (if you have not updated the docker-compose it run with default credentials)
 5. Inside the root directory run `docker-compose up`
-6. Go to http://superb.local:3000 and see if the server is alive.
+6. Go to http://localhost:3000 and see if the `API` server is alive.
+7. Go to http://localhost:3001 and see if the react `frontend` running.
 
 ## Running automated tests
-1. After stared the docker-compose run `docker exec -it api npm test`
+1. Stared the docker-compose services. 
+2. Testing API `docker exec -it api npm test`
+3. Testing Front `docker exec -it front npm test`
 
 ## Functional test using Postman
 
